@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Airtable from 'airtable';
+const base = new Airtable({ apiKey: 'keydVVH8JQAGBQC8h' }).base('app1bMqKwnm8xpoTb');
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      jobs: {}
+    };
+  }
+  componentDidMount() {
+    const jobs = {}; 
+    base('Jobs').select({
+      view: "camden_dev"
+    }).eachPage(function page(records, fetchNextPage) {
+      console.log(records)
+      records.forEach(function (record) {
+        const jobName = record.get('Name');
+        const jobID = record.get('Id');
+        console.log(jobID);
+        jobs[jobID] = jobName;
+      });
+      fetchNextPage();
+    }, function done(err) {
+      if (err) { 
+        console.error(err); 
+      }
+    });
+    this.setState({records: jobs});
+  }
+  render() {
+    return (
+      <div>
+        <div>Hello</div>
+      </div>
+    )
+  }
 }
 
 export default App;
