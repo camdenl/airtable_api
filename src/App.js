@@ -17,8 +17,7 @@ class App extends Component {
       console.log(records)
       records.forEach(function (record) {
         const jobName = record.get('Name');
-        const jobID = record.get('Id');
-        console.log(jobID);
+        const jobID = record['id'];
         jobs[jobID] = jobName;
       });
       fetchNextPage();
